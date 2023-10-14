@@ -1,17 +1,15 @@
-package com.study.spring.studyV1.users.models;
+package com.study.spring.base.authentication.domain.models.entities;
 
 import com.study.spring.base.shared.models.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users_tb")
