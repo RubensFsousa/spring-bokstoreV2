@@ -21,7 +21,7 @@ public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false)
-    protected UUID id;
+    protected Long id;
 
     @Column(name = "created_at", nullable = false)
     protected OffsetDateTime createdAT;

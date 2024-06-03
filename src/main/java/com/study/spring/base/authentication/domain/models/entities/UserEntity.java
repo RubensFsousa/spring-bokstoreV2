@@ -1,5 +1,6 @@
-package com.study.spring.base.authentication.models.entities;
+package com.study.spring.base.authentication.domain.models.entities;
 
+import com.study.spring.base.authentication.domain.models.enums.Roles;
 import com.study.spring.base.shared.models.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,48 +21,40 @@ import java.util.Set;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_users")
+@Table(name = "users_tb")
 public class UserEntity extends BaseEntity implements UserDetails {
 
-    @Column(name = "userName", nullable = false)
-    private String userName;
+    @Column(name = "username", nullable = false)
+    private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
-    private Set<UserLinkRoles> userLinkRoles;
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getUserLinkRoles().stream()
-                .map(UserLinkRoles::getRole)
-                .map(roleEntity -> new SimpleGrantedAuthority(roleEntity.getRole().name()))
-                .toList();
-    }
-
-    @Override
-    public String getUsername() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
