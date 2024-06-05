@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.spring.base.shared.models.DTOs.ProblemDTO;
 import com.study.spring.base.shared.models.enums.ProblemType;
 import com.study.spring.base.shared.utils.DateTimeUtil;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -25,10 +24,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
     //TODO: add i18n
 
     @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException)
-            throws IOException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {
         int status = HttpStatus.UNAUTHORIZED.value();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -50,6 +46,5 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
                 .userMessage(detail)
                 .build();
     }
-
 
 }
