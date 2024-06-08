@@ -1,7 +1,7 @@
 package com.study.spring.base.authentication.domain.services;
 
-import com.study.spring.base.authentication.api.controllers.user.v1.models.DTOs.UserCreateRequest;
+import com.study.spring.base.authentication.domain.models.entities.UserEntity;
 
 public interface UserService {
-    void create(UserCreateRequest request);
+    UserEntity getUserByName(String username);
 }

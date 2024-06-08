@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ProblemObject")
 public record ProblemObjectDTO(
-        @Schema(example = "Name")
+        @Schema(example = "name")
         String name,
-        @Schema(example = "Name not be null")
-        String message
+        @Schema(example = "Name is required")
+        String userMessage
 ) {
 }
