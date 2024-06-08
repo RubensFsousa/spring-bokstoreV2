@@ -39,8 +39,7 @@ public class SecurityConfiguration {
             "/v3/api-docs.yaml",
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/swagger-ui.html",
-            "/ping"
+            "/swagger-ui.html"
     };
 
     @Bean
@@ -49,13 +48,8 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authz -> authz
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_PATHS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/books").hasAnyRole("VISITOR", "ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/books/*").hasAnyRole("VISITOR", "ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/books").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/books").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/books/*").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
