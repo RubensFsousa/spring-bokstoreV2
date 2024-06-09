@@ -1,6 +1,6 @@
 CREATE TABLE users_tb
 (
-    id         BIGINT       NOT NULL,
+    id         SERIAL       NOT NULL,
     created_at TIMESTAMP    NOT NULL,
     updated_at TIMESTAMP    NOT NULL,
     username   VARCHAR(30)  NOT NULL,
