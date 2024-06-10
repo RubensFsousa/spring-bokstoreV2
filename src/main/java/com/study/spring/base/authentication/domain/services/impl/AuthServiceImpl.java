@@ -1,7 +1,7 @@
 package com.study.spring.base.authentication.domain.services.impl;
 
-import com.study.spring.base.authentication.api.controllers.DTOs.LoginRequestDTO;
-import com.study.spring.base.authentication.api.controllers.DTOs.LoginResponseDTO;
+import com.study.spring.base.authentication.api.controllers.auth.DTOs.LoginRequestDTO;
+import com.study.spring.base.authentication.api.controllers.auth.DTOs.LoginResponseDTO;
 import com.study.spring.base.authentication.domain.models.entities.UserEntity;
 import com.study.spring.base.authentication.domain.services.AuthService;
 import com.study.spring.base.authentication.domain.services.TokenService;

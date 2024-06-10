@@ -1,4 +1,4 @@
-package com.study.spring.base.authentication.api.controllers.annotations;
+package com.study.spring.base.authentication.api.controllers.auth.annotations;
 
 import com.study.spring.base.shared.annotations.OpenApiResponse200;
 import io.swagger.v3.oas.annotations.Operation;

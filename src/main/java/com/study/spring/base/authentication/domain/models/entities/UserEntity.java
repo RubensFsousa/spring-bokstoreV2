@@ -18,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users_tb")
@@ -29,6 +29,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "email", nullable = false)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private Roles role;
