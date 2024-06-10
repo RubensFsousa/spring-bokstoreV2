@@ -34,7 +34,7 @@ public class SecurityConfiguration {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     private final String[] PUBLIC_PATHS = {
-            "/auth/login/**",
+            "/auth/login",
             "/v3/api-docs.yaml",
             "/v3/api-docs/**",
             "/swagger-ui/**",

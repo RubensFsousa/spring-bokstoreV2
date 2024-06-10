@@ -5,7 +5,7 @@ CREATE TABLE users_tb
     updated_at TIMESTAMP    NOT NULL,
     username   VARCHAR(30)  NOT NULL,
     "password" VARCHAR(255) NOT NULL,
-    role       VARCHAR(8)   NOT NULL
+    role       VARCHAR(15)   NOT NULL
 );
 
 INSERT INTO users_tb(id, username, password, role, created_at, updated_at)

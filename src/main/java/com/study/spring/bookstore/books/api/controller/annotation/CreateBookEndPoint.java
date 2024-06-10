@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
         summary = "Create Book",
         description = "Requires role: " + Roles.Name.ADMIN
 )
-//@PreAuthorize("hasAnyRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping(method = RequestMethod.POST, produces = "application/json")
 @OpenApiResponse201
 @OpenApiResponse400
