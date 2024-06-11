@@ -3,16 +3,16 @@ package com.study.spring.bookstore.books.api.controller;
 import com.study.spring.base.shared.annotations.ApiController;
 import com.study.spring.base.shared.annotations.OpenApiController;
 import com.study.spring.base.shared.models.PageResponse;
-import com.study.spring.bookstore.books.api.controller.annotation.CreateBookEndPoint;
-import com.study.spring.bookstore.books.api.controller.annotation.GetBookByIdEndPoint;
-import com.study.spring.bookstore.books.api.controller.annotation.GetBookPageEndPoint;
+import com.study.spring.bookstore.books.api.controller.annotation.CreateBookEndpoint;
+import com.study.spring.bookstore.books.api.controller.annotation.DeleteBookEndpoint;
+import com.study.spring.bookstore.books.api.controller.annotation.GetBookByIdEndpoint;
+import com.study.spring.bookstore.books.api.controller.annotation.GetBookPageEndpoint;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookPageResponseDTO;
 import com.study.spring.bookstore.books.domain.services.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,18 +29,18 @@ public class BookController {
 
     private final BookService bookService;
 
-    @CreateBookEndPoint
+    @CreateBookEndpoint
     public ResponseEntity<Void> create(@RequestBody @Valid BookCreateRequestDTO request) {
         bookService.crete(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetBookByIdEndPoint
+    @GetBookByIdEndpoint
     public ResponseEntity<GetBookDetailsResponseDTO> getById(@PathVariable Integer id) {
         return new ResponseEntity<>(bookService.getById(id), HttpStatus.OK);
     }
 
-    @GetBookPageEndPoint
+    @GetBookPageEndpoint
     public PageResponse<GetBookPageResponseDTO> getAll(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "availableQuantity", required = false) Integer availableQuantity,
@@ -52,5 +52,11 @@ public class BookController {
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
         return bookService.getBookPage(search, availableQuantity, launchDate, pageable);
+    }
+
+    @DeleteBookEndpoint
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        bookService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

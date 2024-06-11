@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Operation(
-        summary = "Get book By Id",
+        summary = "Get book by id",
         description = "Requires role: " + Roles.Name.ADMIN + "or" + Roles.Name.VISITOR
 )
 @PreAuthorize("hasAnyAuthority('ADMIN', 'VISITOR')")
@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
 @OpenApiResponse403
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GetBookByIdEndPoint {
+public @interface GetBookByIdEndpoint {
 }

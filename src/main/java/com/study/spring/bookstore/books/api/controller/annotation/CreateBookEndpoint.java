@@ -28,5 +28,5 @@ import java.lang.annotation.Target;
 @OpenApiResponse403
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CreateBookEndPoint {
+public @interface CreateBookEndpoint {
 }

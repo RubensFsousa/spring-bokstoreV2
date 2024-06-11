@@ -15,4 +15,6 @@ public interface BookService {
     GetBookDetailsResponseDTO getById(Integer id);
 
     PageResponse<GetBookPageResponseDTO> getBookPage(String searchText, Integer availableQuantity, LocalDate launchDate, Pageable pageable);
+
+    void delete(Integer id);
 }

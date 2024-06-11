@@ -48,6 +48,12 @@ public class BookServiceImpl implements BookService {
         return bookMapper.toBookPageResponseDTO(booksPage);
     }
 
+    @Override
+    public void delete(Integer id) {
+        //TODO: insert rent logic
+        bookRepository.delete(getUserByIdOrElseThrow(id));
+    }
+
     private BookEntity getUserByIdOrElseThrow(Integer id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not Found"));
     }
