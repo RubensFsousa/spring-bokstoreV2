@@ -1,6 +1,7 @@
 package com.study.spring.bookstore.books.domain.mappers.impl;
 
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
+import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
 import com.study.spring.bookstore.books.domain.entities.BookEntity;
 import com.study.spring.bookstore.books.domain.mappers.BookMapper;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,18 @@ public class BookMapperImpl implements BookMapper {
                 .author(request.author())
                 .availableQuantity(request.availableQuantity())
                 .launchDate(request.launchDate())
+                .build();
+    }
+
+    @Override
+    public GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book) {
+        return GetBookDetailsResponseDTO.builder()
+                .id(book.getId())
+                .name(book.getName())
+                .author(book.getAuthor())
+//                .publisherName()
+                .availableQuantity(book.getAvailableQuantity())
+                .launchDate(book.getLaunchDate())
                 .build();
     }
 
