@@ -1,7 +1,9 @@
 package com.study.spring.bookstore.books.domain.services.impl;
 
+import com.study.spring.base.shared.exceptions.BusinessException;
 import com.study.spring.base.shared.models.PageResponse;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
+import com.study.spring.bookstore.books.api.controller.models.DTOs.BookUpdateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookPageResponseDTO;
 import com.study.spring.bookstore.books.domain.entities.BookEntity;
@@ -28,13 +30,17 @@ public class BookServiceImpl implements BookService {
     @Override
     public void crete(BookCreateRequestDTO request) {
         var book = bookMapper.toBookEntity(request);
+        validateBookName(book);
+
         bookRepository.save(book);
     }
 
     @Override
     public GetBookDetailsResponseDTO getById(Integer id) {
-        var book = getUserByIdOrElseThrow(id);
-        return bookMapper.toBookDetailsResponseDTO(book);
+        var book = getBookByIdOrElseThrow(id);
+        //TODO add rent logic
+//        int availableQuantity = book.getTotalQuantity() - rentsInProcess
+        return bookMapper.toBookDetailsResponseDTO(book, 1);
     }
 
     @Override
@@ -49,12 +55,44 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(Integer id) {
-        //TODO: insert rent logic
-        bookRepository.delete(getUserByIdOrElseThrow(id));
+    public void update(BookUpdateRequestDTO request) {
+        var book = getBookByIdOrElseThrow(request.id());
+
+        book = book.toBuilder()
+                .name(request.name())
+                .author(request.author())
+                .totalQuantity(request.totalQuantity())
+                .launchDate(request.launchDate())
+                .build();
+
+        validateBookName(book);
+        validateBookQuantity(book);
+
+        bookRepository.save(book);
     }
 
-    private BookEntity getUserByIdOrElseThrow(Integer id) {
+    @Override
+    public void delete(Integer id) {
+        //TODO: insert rent logic
+        bookRepository.delete(getBookByIdOrElseThrow(id));
+    }
+
+    private void validateBookQuantity(BookEntity book) {
+        var savedBook = bookRepository.findById(book.getId()).orElse(null);
+        if (savedBook != null && book.getTotalQuantity() < savedBook.getTotalQuantity()) {
+            throw new BusinessException("BookTotalQuantityCannotBeDecreased");
+        }
+    }
+
+    private void validateBookName(BookEntity book) {
+        var savedBook = bookRepository.findByName(book.getName()).orElse(null);
+        if (savedBook != null && !savedBook.getId().equals(book.getId())) {
+            throw new BusinessException("BookNameAlreadyExists");
+        }
+    }
+
+
+    private BookEntity getBookByIdOrElseThrow(Integer id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not Found"));
     }
 

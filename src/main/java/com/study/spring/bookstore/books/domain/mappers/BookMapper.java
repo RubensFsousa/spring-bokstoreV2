@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 public interface BookMapper {
     BookEntity toBookEntity(BookCreateRequestDTO request);
 
-    GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book);
+    GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book, Integer availableQuantity);
 
     PageResponse<GetBookPageResponseDTO> toBookPageResponseDTO(Page<BookEntity> booksPage);
 }

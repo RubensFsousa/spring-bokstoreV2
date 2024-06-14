@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 
 @Operation(
         summary = "Get book by id",
-        description = "Requires role: " + Roles.Name.ADMIN + "or" + Roles.Name.VISITOR
+        description = "Requires role: " + Roles.Name.ADMIN + " or " + Roles.Name.VISITOR
 )
 @PreAuthorize("hasAnyAuthority('ADMIN', 'VISITOR')")
 @RequestMapping(method = RequestMethod.GET, path = "/{id}",  produces = "application/json")

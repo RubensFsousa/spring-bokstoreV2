@@ -1,6 +1,5 @@
 package com.study.spring.bookstore.books.api.controller.annotation;
 
-
 import com.study.spring.base.authentication.domain.models.enums.Roles;
 import com.study.spring.base.shared.annotations.OpenApiResponse201;
 import com.study.spring.base.shared.annotations.OpenApiResponse400;

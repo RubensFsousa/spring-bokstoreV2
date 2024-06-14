@@ -3,11 +3,9 @@ package com.study.spring.bookstore.books.api.controller;
 import com.study.spring.base.shared.annotations.ApiController;
 import com.study.spring.base.shared.annotations.OpenApiController;
 import com.study.spring.base.shared.models.PageResponse;
-import com.study.spring.bookstore.books.api.controller.annotation.CreateBookEndpoint;
-import com.study.spring.bookstore.books.api.controller.annotation.DeleteBookEndpoint;
-import com.study.spring.bookstore.books.api.controller.annotation.GetBookByIdEndpoint;
-import com.study.spring.bookstore.books.api.controller.annotation.GetBookPageEndpoint;
+import com.study.spring.bookstore.books.api.controller.annotation.*;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
+import com.study.spring.bookstore.books.api.controller.models.DTOs.BookUpdateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookPageResponseDTO;
 import com.study.spring.bookstore.books.domain.services.BookService;
@@ -52,6 +50,12 @@ public class BookController {
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
         return bookService.getBookPage(search, availableQuantity, launchDate, pageable);
+    }
+
+    @UpdateBookEndpoint
+    public ResponseEntity<Void> update(@RequestBody @Valid BookUpdateRequestDTO request) {
+        bookService.update(request);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteBookEndpoint

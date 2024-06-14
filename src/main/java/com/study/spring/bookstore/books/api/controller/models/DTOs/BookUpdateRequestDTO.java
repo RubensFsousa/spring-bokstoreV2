@@ -7,8 +7,12 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-@Schema(name = "BookCreateRequest")
-public record BookCreateRequestDTO(
+@Schema(name = "BookUpdateRequest")
+public record BookUpdateRequestDTO(
+        @Schema(description = "book id", example = "1")
+        @Positive
+        @NotNull
+        Integer id,
         @Schema(description = "book name", example = "The Lord of the Rings")
         @Size(max = 50, min = 1)
         @NotEmpty

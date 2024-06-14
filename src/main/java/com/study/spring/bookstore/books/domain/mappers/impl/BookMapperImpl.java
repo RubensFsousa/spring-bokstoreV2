@@ -18,19 +18,19 @@ public class BookMapperImpl implements BookMapper {
                 .name(request.name())
                 .author(request.author())
                 .author(request.author())
-                .availableQuantity(request.availableQuantity())
+                .totalQuantity(request.totalQuantity())
                 .launchDate(request.launchDate())
                 .build();
     }
 
     @Override
-    public GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book) {
+    public GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book, Integer availableQuantity) {
         return GetBookDetailsResponseDTO.builder()
                 .id(book.getId())
                 .name(book.getName())
                 .author(book.getAuthor())
-//                .publisherName()
-                .availableQuantity(book.getAvailableQuantity())
+                .totalQuantity(book.getTotalQuantity())
+                .availableQuantity(availableQuantity)
                 .launchDate(book.getLaunchDate())
                 .build();
     }
@@ -41,9 +41,7 @@ public class BookMapperImpl implements BookMapper {
                 .id(book.getId())
                 .name(book.getName())
                 .author(book.getAuthor())
-                .availableQuantity(book.getAvailableQuantity())
-                .launchDate(book.getLaunchDate())
-//                 .publisherName()
+                .totalQuantity(book.getTotalQuantity())
                 .build()).toList();
 
         return new PageResponse<>(

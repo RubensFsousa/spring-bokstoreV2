@@ -22,8 +22,8 @@ public class BookEntity extends BaseEntity {
     private String name;
     @Column(name = "author", nullable = false)
     private String author;
-    @Column(name = "available_quantity", nullable = false)
-    private int availableQuantity;
+    @Column(name = "total_quantity", nullable = false)
+    private int totalQuantity;
     @Column(name = "launch_date", nullable = false)
     private LocalDate launchDate;
 
