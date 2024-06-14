@@ -3,7 +3,6 @@ package com.study.spring.base.authentication.configs;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -35,7 +34,7 @@ public class SecurityConfiguration {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     private final String[] PUBLIC_PATHS = {
-            "/auth/login/**",
+            "/auth/login",
             "/v3/api-docs.yaml",
             "/v3/api-docs/**",
             "/swagger-ui/**",
