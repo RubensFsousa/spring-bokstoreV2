@@ -5,10 +5,11 @@ import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateReq
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookPageResponseDTO;
 import com.study.spring.bookstore.books.domain.entities.BookEntity;
+import com.study.spring.bookstore.publishers.domain.entities.PublisherEntity;
 import org.springframework.data.domain.Page;
 
 public interface BookMapper {
-    BookEntity toBookEntity(BookCreateRequestDTO request);
+    BookEntity toBookEntity(BookCreateRequestDTO request, PublisherEntity publisherEntity);
 
     GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book, Integer availableQuantity);
 

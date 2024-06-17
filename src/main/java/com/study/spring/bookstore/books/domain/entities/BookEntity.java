@@ -1,9 +1,8 @@
 package com.study.spring.bookstore.books.domain.entities;
 
 import com.study.spring.base.shared.models.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.study.spring.bookstore.publishers.domain.entities.PublisherEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +26,8 @@ public class BookEntity extends BaseEntity {
     @Column(name = "launch_date", nullable = false)
     private LocalDate launchDate;
 
-//TODO: add pub entity
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "publisher_id", referencedColumnName = "id")
-//    private String publisher;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private PublisherEntity publisher;
 
 }

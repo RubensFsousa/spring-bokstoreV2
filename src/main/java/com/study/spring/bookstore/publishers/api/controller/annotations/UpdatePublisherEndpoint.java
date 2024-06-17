@@ -1,4 +1,4 @@
-package com.study.spring.bookstore.books.api.controller.annotation;
+package com.study.spring.bookstore.publishers.api.controller.annotations;
 
 import com.study.spring.base.authentication.domain.models.enums.Roles;
 import com.study.spring.base.shared.annotations.OpenApiResponse204;
@@ -16,7 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Operation(
-        summary = "Update book",
+        summary = "Update publisher",
         description = "Requires role: " + Roles.Name.ADMIN
 )
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -27,5 +27,5 @@ import java.lang.annotation.Target;
 @OpenApiResponse403
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UpdateBookEndpoint {
+public @interface UpdatePublisherEndpoint {
 }
