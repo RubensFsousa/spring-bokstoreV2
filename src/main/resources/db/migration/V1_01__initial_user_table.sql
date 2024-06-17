@@ -6,7 +6,7 @@ CREATE TABLE users_tb
     username   VARCHAR(30)  NOT NULL,
     email      VARCHAR(30)  NOT NULL,
     "password" VARCHAR(255) NOT NULL,
-    role       VARCHAR(8)   NOT NULL
+    role       VARCHAR(15)   NOT NULL
 );
 
 INSERT INTO users_tb(id, email, username, password, role, created_at, updated_at)
