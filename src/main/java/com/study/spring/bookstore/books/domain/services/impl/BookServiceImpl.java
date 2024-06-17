@@ -11,9 +11,10 @@ import com.study.spring.bookstore.books.domain.mappers.BookMapper;
 import com.study.spring.bookstore.books.domain.repositories.BookRepository;
 import com.study.spring.bookstore.books.domain.services.BookService;
 import com.study.spring.bookstore.books.domain.specs.BookSpecs;
+import com.study.spring.bookstore.publishers.domain.entities.PublisherEntity;
+import com.study.spring.bookstore.publishers.domain.repositories.PublisherRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {
 
+    private final PublisherRepository publisherRepository;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
     @Override
     public void crete(BookCreateRequestDTO request) {
-        var book = bookMapper.toBookEntity(request);
+        var publisher = getPublisherByIdOrElseThrow(request.publisherId());
+        var book = bookMapper.toBookEntity(request, publisher);
         validateBookName(book);
 
         bookRepository.save(book);
@@ -63,6 +66,7 @@ public class BookServiceImpl implements BookService {
                 .author(request.author())
                 .totalQuantity(request.totalQuantity())
                 .launchDate(request.launchDate())
+                .publisher(getPublisherByIdOrElseThrow(request.publisherId()))
                 .build();
 
         validateBookName(book);
@@ -75,6 +79,10 @@ public class BookServiceImpl implements BookService {
     public void delete(Integer id) {
         //TODO: insert rent logic
         bookRepository.delete(getBookByIdOrElseThrow(id));
+    }
+
+    private PublisherEntity getPublisherByIdOrElseThrow(Integer id) {
+        return publisherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Publisher not Found"));
     }
 
     private void validateBookQuantity(BookEntity book) {
@@ -90,7 +98,6 @@ public class BookServiceImpl implements BookService {
             throw new BusinessException("BookNameAlreadyExists");
         }
     }
-
 
     private BookEntity getBookByIdOrElseThrow(Integer id) {
         return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not Found"));

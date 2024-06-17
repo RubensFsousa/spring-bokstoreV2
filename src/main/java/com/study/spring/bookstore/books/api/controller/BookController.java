@@ -3,7 +3,7 @@ package com.study.spring.bookstore.books.api.controller;
 import com.study.spring.base.shared.annotations.ApiController;
 import com.study.spring.base.shared.annotations.OpenApiController;
 import com.study.spring.base.shared.models.PageResponse;
-import com.study.spring.bookstore.books.api.controller.annotation.*;
+import com.study.spring.bookstore.books.api.controller.annotations.*;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookUpdateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookDetailsResponseDTO;
@@ -33,13 +33,13 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetBookByIdEndpoint
+    @GetBookDetailsEndpoint
     public ResponseEntity<GetBookDetailsResponseDTO> getById(@PathVariable Integer id) {
         return new ResponseEntity<>(bookService.getById(id), HttpStatus.OK);
     }
 
     @GetBookPageEndpoint
-    public PageResponse<GetBookPageResponseDTO> getAll(
+    public ResponseEntity<PageResponse<GetBookPageResponseDTO>> getPage(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "availableQuantity", required = false) Integer availableQuantity,
             @RequestParam(value = "launchDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate launchDate,
@@ -49,7 +49,7 @@ public class BookController {
             @RequestParam(value = "direction", defaultValue = "ASC") String direction
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        return bookService.getBookPage(search, availableQuantity, launchDate, pageable);
+        return new ResponseEntity<>(bookService.getBookPage(search, availableQuantity, launchDate, pageable), HttpStatus.OK);
     }
 
     @UpdateBookEndpoint
