@@ -1,8 +1,8 @@
-package com.study.spring.base.authentication.api.controllers;
+package com.study.spring.base.authentication.api.controllers.auth;
 
-import com.study.spring.base.authentication.api.controllers.DTOs.LoginRequestDTO;
-import com.study.spring.base.authentication.api.controllers.DTOs.LoginResponseDTO;
-import com.study.spring.base.authentication.api.controllers.annotations.LoginEndPoint;
+import com.study.spring.base.authentication.api.controllers.auth.DTOs.LoginRequestDTO;
+import com.study.spring.base.authentication.api.controllers.auth.DTOs.LoginResponseDTO;
+import com.study.spring.base.authentication.api.controllers.auth.annotations.LoginEndPoint;
 import com.study.spring.base.authentication.domain.services.AuthService;
 import com.study.spring.base.shared.annotations.ApiController;
 import com.study.spring.base.shared.annotations.OpenApiController;

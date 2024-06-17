@@ -1,4 +1,4 @@
-package com.study.spring.base.authentication.api.controllers.DTOs;
+package com.study.spring.base.authentication.api.controllers.auth.DTOs;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
