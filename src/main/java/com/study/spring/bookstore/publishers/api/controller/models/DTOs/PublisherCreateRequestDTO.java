@@ -1,6 +1,7 @@
 package com.study.spring.bookstore.publishers.api.controller.models.DTOs;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -14,11 +15,12 @@ public record PublisherCreateRequestDTO(
         @NotEmpty
         String name,
         @Schema(description = "publisher contact email", example = "consumercare@harpercollins.com")
+        @Email
         @Size(max = 50, min = 1)
         @NotEmpty
         String email,
         @Schema(description = "publisher contact telephone", example = "212-207-7000")
-        @Pattern(regexp = "^[\\+]?[(]?[0-9]{3}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$")
+        @Pattern(regexp = "^(\\+?\\d{1,3}[\\s.-]?)?\\(?\\d{2}\\)?[\\s.-]?\\d{3,4}[\\s.-]?\\d{4,6}$")
         @NotEmpty
         String telephone,
         @Schema(description = "publisher web site", example = "harpercollins.com")

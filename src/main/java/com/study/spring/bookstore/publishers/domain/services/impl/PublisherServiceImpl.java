@@ -35,7 +35,6 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public GetPublisherDetailsResponseDTO getById(Integer id) {
         var publisher = getPublisherByIdOrElseThrow(id);
-        System.out.println(publisher.getBooks().get(0).getName());
         return publisherMapper.toPublisherDetailsResponseDTO(publisher);
     }
 
