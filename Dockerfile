@@ -8,7 +8,7 @@ RUN mvn -f /home/app/pom.xml clean package
 #
 # Package stage
 #
-FROM adoptium/temurin:17-jre-slim  # Use Adoptium image for Java 17 JRE
+FROM adoptium/temurin:17-jre-slim  # Correct syntax: One argument (base image)
 COPY --from=build /home/app/target/*.jar /app/app.jar
 ENV TZ 'America/Fortaleza'
 RUN echo $TZ > /etc/timezone && \
