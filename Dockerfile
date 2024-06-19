@@ -17,4 +17,3 @@ RUN echo $TZ > /etc/timezone && \
   apt-get clean
 WORKDIR /app
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
-
