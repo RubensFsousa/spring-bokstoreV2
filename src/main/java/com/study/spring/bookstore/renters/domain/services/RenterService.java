@@ -12,7 +12,7 @@ public interface RenterService {
 
     GetRenterDetailsResponseDTO getById(Integer id);
 
-    PageResponse<GetRenterPageResponseDTO> getPublisherPage(String search, PageRequest pageable);
+    PageResponse<GetRenterPageResponseDTO> getRenterPage(String search, PageRequest pageable);
 
     void update(RenterUpdateRequestDTO request);
 

@@ -12,6 +12,7 @@ import com.study.spring.bookstore.renters.domain.mapper.RenterMapper;
 import com.study.spring.bookstore.renters.domain.repositories.RenterRepository;
 import com.study.spring.bookstore.renters.domain.services.RenterService;
 import com.study.spring.bookstore.renters.domain.specs.RenterSpecs;
+import com.study.spring.bookstore.rents.domain.enums.RentStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +30,7 @@ public class RenterServiceImpl implements RenterService {
         var renter = renterMapper.toRenterEntity(request);
         validateRenterName(renter);
         validateRenterCPF(renter);
+        validateRenterTelephone(renter);
 
         renterRepository.save(renter);
     }
@@ -36,13 +38,15 @@ public class RenterServiceImpl implements RenterService {
     @Override
     public GetRenterDetailsResponseDTO getById(Integer id) {
         var renter = getRenterByIdOrElseThrow(id);
+        validateIsDeleted(renter);
         return renterMapper.toRenterDetailsResponseDTO(renter);
     }
 
     @Override
-    public PageResponse<GetRenterPageResponseDTO> getPublisherPage(String search, PageRequest pageable) {
+    public PageResponse<GetRenterPageResponseDTO> getRenterPage(String search, PageRequest pageable) {
         Specification<RenterEntity> spec = Specification
-                .where(RenterSpecs.containsTextInAllColumns(search));
+                .where(RenterSpecs.containsTextInAllColumns(search))
+                .and(RenterSpecs.isDeleted(false));
 
         var rentersPage = renterRepository.findAll(spec, pageable);
         return renterMapper.toRenterPageResponseDTO(rentersPage);
@@ -51,6 +55,7 @@ public class RenterServiceImpl implements RenterService {
     @Override
     public void update(RenterUpdateRequestDTO request) {
         var renter = getRenterByIdOrElseThrow(request.id());
+        validateIsDeleted(renter);
 
         renter = renter.toBuilder()
                 .name(request.name())
@@ -69,12 +74,26 @@ public class RenterServiceImpl implements RenterService {
     @Override
     public void delete(Integer id) {
         var renter = getRenterByIdOrElseThrow(id);
-        //TODO: add rent logic
-        renterRepository.save(renter);
+        validateIsDeleted(renter);
+        var rentsWithRenter = renter.getRents().stream().filter(rent -> !rent.getStatus().equals(RentStatus.DELIVERED)).toList();
+        if (!rentsWithRenter.isEmpty()) throw new BusinessException("this renter have a pendency");
+        renterRepository.save(renter.toBuilder().isDeleted(true).build());
     }
 
     private RenterEntity getRenterByIdOrElseThrow(Integer id) {
-        return renterRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Renter not found"));
+        return renterRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Renter not found"));
+    }
+
+    private void validateIsDeleted(RenterEntity renter) {
+        if(renter.isDeleted()) throw new BusinessException("this Renter was deleted");
+    }
+
+    private void validateRenterTelephone(RenterEntity renter) {
+        var savedRenter = renterRepository.findByTelephone(renter.getTelephone()).orElse(null);
+        if (savedRenter != null && !savedRenter.getId().equals(renter.getId())){
+            throw new BusinessException("RenterTelephoneAlreadyExists");
+        }
     }
 
     private void validateRenterName(RenterEntity renter) {

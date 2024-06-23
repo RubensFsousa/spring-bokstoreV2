@@ -11,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 
 public interface BookService {
-    void crete(BookCreateRequestDTO request);
+    void create(BookCreateRequestDTO request);
     GetBookDetailsResponseDTO getById(Integer id);
     PageResponse<GetBookPageResponseDTO> getBookPage(String searchText, Integer availableQuantity, LocalDate launchDate, Pageable pageable);
     void update(BookUpdateRequestDTO request);

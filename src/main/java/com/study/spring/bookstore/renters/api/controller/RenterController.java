@@ -46,7 +46,7 @@ public class RenterController {
             @RequestParam(value = "direction", defaultValue = "ASC") String direction
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        return new ResponseEntity<>(renterService.getPublisherPage(search, pageable), HttpStatus.OK);
+        return new ResponseEntity<>(renterService.getRenterPage(search, pageable), HttpStatus.OK);
     }
 
     @UpdateRenterEndpoint
