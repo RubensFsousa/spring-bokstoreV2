@@ -28,17 +28,18 @@ public class BookMapperImpl implements BookMapper {
                 .totalQuantity(request.totalQuantity())
                 .launchDate(request.launchDate())
                 .publisher(publisherEntity)
+                .isDeleted(false)
                 .build();
     }
 
     @Override
-    public GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book, Integer availableQuantity) {
+    public GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book) {
         return GetBookDetailsResponseDTO.builder()
                 .id(book.getId())
                 .name(book.getName())
                 .author(book.getAuthor())
                 .totalQuantity(book.getTotalQuantity())
-                .availableQuantity(availableQuantity)
+                .availableQuantity(book.getAvailableQuantity())
                 .launchDate(book.getLaunchDate())
                 .publisherName(book.getPublisher().getName())
                 .build();

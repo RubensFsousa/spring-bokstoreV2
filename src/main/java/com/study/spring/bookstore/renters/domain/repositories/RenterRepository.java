@@ -15,4 +15,5 @@ public interface RenterRepository extends JpaRepository<RenterEntity, Integer>, 
 
     Optional<RenterEntity> findByCpf(String name);
 
+    Optional<RenterEntity> findByTelephone(String telephone);
 }
