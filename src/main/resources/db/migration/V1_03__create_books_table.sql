@@ -8,6 +8,7 @@ CREATE TABLE books_tb
     total_quantity INTEGER     NOT NULL,
     launch_date    DATE        NOT NULL,
     publisher_id   INTEGER     NOT NULL,
+    is_deleted     BOOLEAN     NOT NULL,
 
     CONSTRAINT books_tb_pk_id PRIMARY KEY (id),
     CONSTRAINT books_tb_publisher_id_fk FOREIGN KEY (publisher_id) REFERENCES publishers_tb (id)

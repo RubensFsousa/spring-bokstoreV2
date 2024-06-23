@@ -20,6 +20,7 @@ public class RenterMapperImpl implements RenterMapper {
                 .telephone(request.telephone())
                 .address(request.address())
                 .cpf(request.cpf())
+                .isDeleted(false)
                 .build();
     }
 

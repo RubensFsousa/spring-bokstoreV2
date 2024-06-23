@@ -66,14 +66,13 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public void delete(Integer id) {
         var publisher = getPublisherByIdOrElseThrow(id);
-        if (!publisher.getBooks().isEmpty()){
-            throw new BusinessException("Already books using this publisher");
-        }
+        if (!publisher.getBooks().isEmpty()) throw new BusinessException("Already books using this publisher");
         publisherRepository.delete(publisher);
     }
 
     private PublisherEntity getPublisherByIdOrElseThrow(Integer id) {
-        return publisherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Publisher not Found"));
+        return publisherRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Publisher not Found"));
     }
 
     private void validatePublisherName(PublisherEntity publisher) {

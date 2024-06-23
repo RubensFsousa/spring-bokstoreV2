@@ -44,4 +44,8 @@ public class BookSpecs {
             return criteriaBuilder.equal(root.get("launchDate"), date);
         };
     }
+
+    public static Specification<BookEntity> isDeleted(boolean isDeleted) {
+        return (root, query, cb) -> cb.equal(root.get("isDeleted"), isDeleted);
+    }
 }

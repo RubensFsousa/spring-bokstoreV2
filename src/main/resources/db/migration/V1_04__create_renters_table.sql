@@ -8,6 +8,7 @@ CREATE TABLE renters_tb
     telephone  VARCHAR(20)  NOT NULL,
     address    VARCHAR(255) NOT NULL,
     cpf        varchar(20),
+    is_deleted BOOLEAN      NOT NULL,
 
     CONSTRAINT renters_tb_pk_id PRIMARY KEY (id)
 );

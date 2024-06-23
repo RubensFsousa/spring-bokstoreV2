@@ -29,7 +29,7 @@ public class BookController {
 
     @CreateBookEndpoint
     public ResponseEntity<Void> create(@RequestBody @Valid BookCreateRequestDTO request) {
-        bookService.crete(request);
+        bookService.create(request);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

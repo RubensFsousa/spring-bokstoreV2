@@ -23,4 +23,7 @@ public class RenterSpecs {
         };
     }
 
+    public static Specification<RenterEntity> isDeleted(boolean isDeleted) {
+        return (root, query, cb) -> cb.equal(root.get("isDeleted"), isDeleted);
+    }
 }

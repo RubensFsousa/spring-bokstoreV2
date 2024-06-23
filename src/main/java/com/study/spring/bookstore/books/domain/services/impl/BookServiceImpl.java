@@ -1,6 +1,7 @@
 package com.study.spring.bookstore.books.domain.services.impl;
 
 import com.study.spring.base.shared.exceptions.BusinessException;
+import com.study.spring.base.shared.exceptions.EntityNotFoundException;
 import com.study.spring.base.shared.models.PageResponse;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookCreateRequestDTO;
 import com.study.spring.bookstore.books.api.controller.models.DTOs.BookUpdateRequestDTO;
@@ -13,7 +14,7 @@ import com.study.spring.bookstore.books.domain.services.BookService;
 import com.study.spring.bookstore.books.domain.specs.BookSpecs;
 import com.study.spring.bookstore.publishers.domain.entities.PublisherEntity;
 import com.study.spring.bookstore.publishers.domain.repositories.PublisherRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.study.spring.bookstore.rents.domain.enums.RentStatus;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,7 +31,7 @@ public class BookServiceImpl implements BookService {
     private final BookMapper bookMapper;
 
     @Override
-    public void crete(BookCreateRequestDTO request) {
+    public void create(BookCreateRequestDTO request) {
         var publisher = getPublisherByIdOrElseThrow(request.publisherId());
         var book = bookMapper.toBookEntity(request, publisher);
         validateBookName(book);
@@ -41,9 +42,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public GetBookDetailsResponseDTO getById(Integer id) {
         var book = getBookByIdOrElseThrow(id);
-        //TODO add rent logic
-//        int availableQuantity = book.getTotalQuantity() - rentsInProcess
-        return bookMapper.toBookDetailsResponseDTO(book, 1);
+        validateIsDeleted(book);
+
+        return bookMapper.toBookDetailsResponseDTO(book);
     }
 
     @Override
@@ -51,7 +52,8 @@ public class BookServiceImpl implements BookService {
         Specification<BookEntity> spec = Specification
                 .where(BookSpecs.containsTextInAllColumns(searchText))
                 .and(BookSpecs.availableQuantityEquals(availableQuantity))
-                .and(BookSpecs.launchDateEquals(launchDate));
+                .and(BookSpecs.launchDateEquals(launchDate))
+                .and(BookSpecs.isDeleted(false));
 
         var booksPage = bookRepository.findAll(spec, pageable);
         return bookMapper.toBookPageResponseDTO(booksPage);
@@ -60,6 +62,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void update(BookUpdateRequestDTO request) {
         var book = getBookByIdOrElseThrow(request.id());
+        validateIsDeleted(book);
 
         book = book.toBuilder()
                 .name(request.name())
@@ -77,12 +80,20 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void delete(Integer id) {
-        //TODO: insert rent logic
-        bookRepository.delete(getBookByIdOrElseThrow(id));
+        var book = getBookByIdOrElseThrow(id);
+        validateIsDeleted(book);
+        var rentsWithBook = book.getRents().stream().filter(rent -> !rent.getStatus().equals(RentStatus.DELIVERED)).toList();
+        if (!rentsWithBook.isEmpty()) throw new BusinessException("Rent current using this book");
+        bookRepository.save(book.toBuilder().isDeleted(true).build());
     }
 
     private PublisherEntity getPublisherByIdOrElseThrow(Integer id) {
-        return publisherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Publisher not Found"));
+        return publisherRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Publisher not Found"));
+    }
+
+    private void validateIsDeleted(BookEntity book) {
+        if (book.getIsDeleted()) throw new BusinessException("this book was deleted");
     }
 
     private void validateBookQuantity(BookEntity book) {
@@ -99,8 +110,9 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private BookEntity getBookByIdOrElseThrow(Integer id) {
-        return bookRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Book not Found"));
+    public BookEntity getBookByIdOrElseThrow(Integer id) {
+        return bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book not Found"));
     }
 
 }

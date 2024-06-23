@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 public interface BookMapper {
     BookEntity toBookEntity(BookCreateRequestDTO request, PublisherEntity publisherEntity);
 
-    GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book, Integer availableQuantity);
+    GetBookDetailsResponseDTO toBookDetailsResponseDTO(BookEntity book);
 
     PageResponse<GetBookPageResponseDTO> toBookPageResponseDTO(Page<BookEntity> booksPage);
 }
