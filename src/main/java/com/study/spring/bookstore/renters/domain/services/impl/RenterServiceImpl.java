@@ -29,6 +29,7 @@ public class RenterServiceImpl implements RenterService {
     public void create(RenterCreateRequestDTO request) {
         var renter = renterMapper.toRenterEntity(request);
         validateRenterName(renter);
+        validateRenterEmail(renter);
         validateRenterCPF(renter);
         validateRenterTelephone(renter);
 
@@ -66,7 +67,9 @@ public class RenterServiceImpl implements RenterService {
                 .build();
 
         validateRenterName(renter);
+        validateRenterEmail(renter);
         validateRenterCPF(renter);
+        validateRenterTelephone(renter);
 
         renterRepository.save(renter);
     }
@@ -93,6 +96,13 @@ public class RenterServiceImpl implements RenterService {
         var savedRenter = renterRepository.findByTelephone(renter.getTelephone()).orElse(null);
         if (savedRenter != null && !savedRenter.getId().equals(renter.getId())){
             throw new BusinessException("RenterTelephoneAlreadyExists");
+        }
+    }
+
+    private void validateRenterEmail(RenterEntity renter) {
+        var savedRenter = renterRepository.findByEmail(renter.getEmail()).orElse(null);
+        if (savedRenter != null && !savedRenter.getId().equals(renter.getId())) {
+            throw new BusinessException("RenterNameAlreadyExists");
         }
     }
 

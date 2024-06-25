@@ -10,6 +10,8 @@ public record GetRenterPageResponseDTO(
         Integer id,
         @Schema(description = "renter name", example = "yuri alberto")
         String name,
+        @Schema(description = "renter telephone", example = "988686097")
+        String telephone,
         @Schema(description = "renter contact email", example = "yuri@alberto.com")
         String email
 ) {

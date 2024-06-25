@@ -62,6 +62,9 @@ public class PublisherServiceImpl implements PublisherService {
                 .build();
 
         validatePublisherName(publisher);
+        validatePublisherEmail(publisher);
+        validatePublisherTelephone(publisher);
+        validatePublisherSite(publisher);
 
         publisherRepository.save(publisher);
     }
