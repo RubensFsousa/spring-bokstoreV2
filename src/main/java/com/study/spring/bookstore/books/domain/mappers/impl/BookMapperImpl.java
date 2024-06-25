@@ -39,6 +39,7 @@ public class BookMapperImpl implements BookMapper {
                 .name(book.getName())
                 .author(book.getAuthor())
                 .totalQuantity(book.getTotalQuantity())
+                .inUseQuantity(book.getInUseQuantity())
                 .availableQuantity(book.getAvailableQuantity())
                 .launchDate(book.getLaunchDate())
                 .publisherName(book.getPublisher().getName())
@@ -52,6 +53,8 @@ public class BookMapperImpl implements BookMapper {
                 .name(book.getName())
                 .author(book.getAuthor())
                 .totalQuantity(book.getTotalQuantity())
+                .availableQuantity(book.getAvailableQuantity())
+                .inUseQuantity(book.getInUseQuantity())
                 .build()).toList();
 
         return new PageResponse<>(
