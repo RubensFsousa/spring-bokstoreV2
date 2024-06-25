@@ -28,6 +28,9 @@ public class PublisherServiceImpl implements PublisherService {
     public void create(PublisherCreateRequestDTO request) {
         var publisher = publisherMapper.toPublisherEntity(request);
         validatePublisherName(publisher);
+        validatePublisherEmail(publisher);
+        validatePublisherTelephone(publisher);
+        validatePublisherSite(publisher);
         
         publisherRepository.save(publisher);
     }
@@ -79,6 +82,27 @@ public class PublisherServiceImpl implements PublisherService {
         var savedPublisher = publisherRepository.findByName(publisher.getName()).orElse(null);
         if (savedPublisher != null && !savedPublisher.getId().equals(publisher.getId())) {
             throw new BusinessException("PublisherNameAlreadyExists");
+        }
+    }
+
+    private void validatePublisherEmail(PublisherEntity publisher) {
+        var savedPublisher = publisherRepository.findByEmail(publisher.getEmail()).orElse(null);
+        if (savedPublisher != null && !savedPublisher.getId().equals(publisher.getId())) {
+            throw new BusinessException("PublisherEmailAlreadyExists");
+        }
+    }
+
+    private void validatePublisherTelephone(PublisherEntity publisher) {
+        var savedPublisher = publisherRepository.findByTelephone(publisher.getTelephone()).orElse(null);
+        if (savedPublisher != null && !savedPublisher.getId().equals(publisher.getId())) {
+            throw new BusinessException("PublisherTelephoneAlreadyExists");
+        }
+    }
+
+    private void validatePublisherSite(PublisherEntity publisher) {
+        var savedPublisher = publisherRepository.findBySite(publisher.getSite()).orElse(null);
+        if (savedPublisher != null && !savedPublisher.getId().equals(publisher.getId())) {
+            throw new BusinessException("PublisherEmailAlreadyExists");
         }
     }
 
