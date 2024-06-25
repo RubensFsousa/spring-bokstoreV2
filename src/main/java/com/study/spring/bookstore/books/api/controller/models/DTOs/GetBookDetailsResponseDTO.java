@@ -14,10 +14,12 @@ public record GetBookDetailsResponseDTO(
         String name,
         @Schema(description = "book author", example = "author name")
         String author,
+        @Schema(description = "book total quantity", example = "1")
+        Integer totalQuantity,
         @Schema(description = "book available quantity", example = "1")
         Integer availableQuantity,
-        @Schema(description = "boo total quantity", example = "1")
-        Integer totalQuantity,
+        @Schema(description = "book in use quantity", example = "1")
+        Integer inUseQuantity,
         @Schema(description = "book launch date", example = "10/12/1986")
         LocalDate launchDate,
         @Schema(description = "book publisher", example = "publisher")
