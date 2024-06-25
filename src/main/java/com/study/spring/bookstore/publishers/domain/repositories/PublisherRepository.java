@@ -12,4 +12,10 @@ import java.util.Optional;
 @Repository
 public interface PublisherRepository extends JpaRepository<PublisherEntity, Integer>, JpaSpecificationExecutor<PublisherEntity> {
     Optional<PublisherEntity> findByName(String name);
+
+    Optional<PublisherEntity> findByEmail(String email);
+
+    Optional<PublisherEntity> findByTelephone(String telephone);
+
+    Optional<PublisherEntity> findBySite(String site);
 }
