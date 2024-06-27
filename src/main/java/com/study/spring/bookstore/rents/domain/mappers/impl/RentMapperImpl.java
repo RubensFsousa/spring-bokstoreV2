@@ -21,7 +21,7 @@ public class RentMapperImpl implements RentMapper {
         return RentEntity.builder()
                 .renter(renter)
                 .book(book)
-                .deadLineDead(request.Deadline())
+                .deadLineDead(request.deadline())
                 .status(IN_TIME)
                 .build();
     }
