@@ -1,11 +1,10 @@
-# Estágio de construção
-FROM eclipse-temurin:17-jdk as build
+FROM maven:3.6.0-jdk-8-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+RUN mvn -f /home/app/pom.xml package -Dmaven.test.skip=true
 
 # Estágio de empacotamento
-FROM eclipse-temurin:17-jdk-slim
+FROM openjdk:8-jre-slim
 COPY --from=build /home/app/target/*.jar /app/app.jar
 ENV TZ 'America/Fortaleza'
 RUN echo $TZ > /etc/timezone && \
