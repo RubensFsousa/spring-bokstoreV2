@@ -1,7 +1,7 @@
 FROM maven:3.6.0-jdk-8-slim AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml package -Dmaven.test.skip=true
+RUN mvn /home/app/pom.xml package
 
 # Estágio de empacotamento
 FROM openjdk:8-jre-slim
