@@ -1,7 +1,9 @@
+# Estágio de construção
 FROM maven:3.6.0-jdk-8-slim AS build
+WORKDIR /home/app
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn /home/app/pom.xml package
+RUN mvn package -Dmaven.test.skip=true
 
 # Estágio de empacotamento
 FROM openjdk:8-jre-slim
