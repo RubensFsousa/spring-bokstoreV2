@@ -7,7 +7,7 @@ RUN mvn -Dmaven.repo.local=/.m2 -f /home/app/pom.xml package -Dmaven.test.skip=t
 
 
 # Estágio de empacotamento
-FROM openjdk:17-jdk-alpine
+FROM openjdk:17-jdk-slim
 COPY --from=build /home/app/target/*.jar /app/app.jar
 ENV TZ 'America/Fortaleza'
 RUN echo $TZ > /etc/timezone && \
