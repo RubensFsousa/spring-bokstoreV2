@@ -9,6 +9,6 @@ services :
      - DATASOURCE_URL
      - DATASOURCE_USERNAME
      - DATASOURCE_PASSWORD
-
+     - SERVER_PORT
     ports :
       - "${PORT_BACK}:8080"
