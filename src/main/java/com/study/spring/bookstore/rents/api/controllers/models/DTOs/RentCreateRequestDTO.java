@@ -23,6 +23,6 @@ public record RentCreateRequestDTO(
         @Schema(description = "deadline for devolution")
         @FutureOrPresent
         @MaxThirtyDays
-        LocalDate Deadline
+        LocalDate deadline
 ) {
 }

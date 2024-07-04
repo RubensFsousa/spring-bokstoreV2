@@ -39,13 +39,16 @@ public class RentServiceImpl implements RentService {
         var renter = getRenter(request.renterId());
 
         validateRent(renter, book);
-        var rent = rentMapper.toRentEntity(request, book, renter);
+        validateDeadline(request.deadline());
 
+        var rent = rentMapper.toRentEntity(request, book, renter);
         rentRepository.save(rent);
     }
 
     @Override
     public PageResponse<GetRentPageResponseDTO> getRentPage(String searchText, RentStatus status, PageRequest pageable) {
+        updateRentStatuses();
+
         Specification<RentEntity> spec = Specification
                 .where(RentSpecs.containsTextInAllColumns(searchText))
                 .and(RentSpecs.rentStatusEquals(status));
@@ -56,31 +59,39 @@ public class RentServiceImpl implements RentService {
 
     @Override
     public void update(Integer id) {
+        updateRentStatuses();
+
         var rent = getRentByIdOrElseThrow(id);
-        if (rent.getStatus().equals(RentStatus.DELIVERED)){
+        if (rent.getStatus() == RentStatus.DELIVERED) {
             throw new BusinessException("Rent already delivered");
         }
+
         rent.toBuilder()
                 .status(RentStatus.DELIVERED)
                 .devolutionDate(LocalDate.now())
                 .build();
+        rentRepository.save(rent);
     }
 
     @Override
     public GetMostRentedBookResponseDTO mostRentedBook() {
-        var mostRented = rentRepository.findMostRentedBook().stream().findFirst().orElse(null);
-        return rentMapper.toMostRentedBookResponseDTO(mostRented);
+        updateRentStatuses();
+
+        var mostRented = rentRepository.findMostRentedBook();
+        return rentMapper.toMostRentedBookResponseDTO(mostRented.get(0));
     }
 
     private void validateRent(RenterEntity renter, BookEntity book) {
-        if (book.getIsDeleted() || book.getAvailableQuantity().equals(0))
-            throw new BusinessException("this book is unavailable to rent");
-        if (renter.isDeleted()) throw new BusinessException("this renter is unavailable to rent");
-        if (renter.getRents().stream()
-                .filter(rent -> !rent.getStatus().equals(RentStatus.DELIVERED))
-                .anyMatch(rent -> rent.getBook().equals(book))
-        ) {
-            throw new BusinessException("this renter have a pendency with this book");
+        if (book.getIsDeleted() || book.getAvailableQuantity() == 0) {
+            throw new BusinessException("This book is unavailable to rent");
+        }
+        if (renter.isDeleted()) {
+            throw new BusinessException("This renter is unavailable to rent");
+        }
+        boolean hasPendingRent = renter.getRents().stream()
+                .anyMatch(rent -> rent.getStatus() != RentStatus.DELIVERED && rent.getBook().equals(book));
+        if (hasPendingRent) {
+            throw new BusinessException("This renter has a pending rent with this book");
         }
     }
 
@@ -99,4 +110,20 @@ public class RentServiceImpl implements RentService {
                 .orElseThrow(() -> new EntityNotFoundException("Book not found"));
     }
 
+    private void updateRentStatuses() {
+        List<RentEntity> rents = rentRepository.findAll();
+        for (RentEntity rent : rents) {
+            if (rent.getStatus() != RentStatus.DELIVERED && rent.getDeadLineDead().isBefore(LocalDate.now())) {
+                rent.toBuilder().status(RentStatus.DELAYED).build();
+                rentRepository.save(rent);
+            }
+        }
+    }
+
+    private void validateDeadline(LocalDate deadLine) {
+        LocalDate today = LocalDate.now();
+        if (deadLine.isAfter(today.plusDays(30))) {
+            throw new BusinessException("The deadline cannot be more than 30 days from the rent creation date.");
+        }
+    }
 }

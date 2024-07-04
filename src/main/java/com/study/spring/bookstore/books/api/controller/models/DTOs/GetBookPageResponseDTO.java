@@ -14,7 +14,11 @@ public record GetBookPageResponseDTO(
         String name,
         @Schema(description = "book author", example = "author name")
         String author,
+        @Schema(description = "book total quantity", example = "1")
+        Integer totalQuantity,
         @Schema(description = "book available quantity", example = "1")
-        Integer totalQuantity
+        Integer availableQuantity,
+        @Schema(description = "book in use quantity", example = "1")
+        Integer inUseQuantity
 ) {
 }

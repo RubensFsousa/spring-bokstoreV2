@@ -42,4 +42,8 @@ public class BookEntity extends BaseEntity {
     public Integer getAvailableQuantity() {
         return getTotalQuantity() - getRents().stream().filter(rent -> !rent.getStatus().equals(RentStatus.DELIVERED)).toList().size();
     }
+
+    public Integer getInUseQuantity() {
+        return getTotalQuantity() - getAvailableQuantity();
+    }
 }

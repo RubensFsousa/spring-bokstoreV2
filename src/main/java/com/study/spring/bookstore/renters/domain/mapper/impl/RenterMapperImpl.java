@@ -42,6 +42,7 @@ public class RenterMapperImpl implements RenterMapper {
                 .id(renter.getId())
                 .name(renter.getName())
                 .email(renter.getEmail())
+                .telephone(renter.getTelephone())
                 .build()).toList();
 
         return new PageResponse<>(
