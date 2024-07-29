@@ -1,0 +1,14 @@
+version : '3'
+
+services :
+  livraria_api :
+    build : .
+    image : livraria-api:${CI_COMMIT_REF_SLUG:-latest}
+    container_name : livraria-api-${CI_COMMIT_REF_SLUG:-unknown}
+    environment :
+     - DATASOURCE_URL
+     - DATASOURCE_USERNAME
+     - DATASOURCE_PASSWORD
+     - SERVER_PORT
+    ports :
+      - "${PORT_BACK}:8080"

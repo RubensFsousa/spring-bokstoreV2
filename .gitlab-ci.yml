@@ -1,0 +1,16 @@
+.deploy :
+  stage : deploy
+  script :
+    - >
+      sudo --preserve-env
+      docker-compose
+      --project-name "livraria-api-$CI_COMMIT_REF_SLUG"
+      up -d --build
+
+deploy_develop :
+  extends : .deploy
+  environment : develop
+  only :
+    - develop
+  tags :
+    - runner_dev
