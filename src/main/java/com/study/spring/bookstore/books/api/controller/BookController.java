@@ -35,11 +35,6 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetBookDetailsEndpoint
-    public ResponseEntity<GetBookDetailsResponseDTO> getById(@PathVariable Integer id) {
-        return new ResponseEntity<>(bookService.getById(id), HttpStatus.OK);
-    }
-
     @GetBookPageEndpoint
     public ResponseEntity<PageResponse<GetBookPageResponseDTO>> getPage(
             @RequestParam(value = "search", required = false) String search,
@@ -52,6 +47,11 @@ public class BookController {
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
         return new ResponseEntity<>(bookService.getBookPage(search, availableQuantity, launchDate, pageable), HttpStatus.OK);
+    }
+
+    @GetBookDetailsEndpoint
+    public ResponseEntity<GetBookDetailsResponseDTO> getById(@PathVariable Integer id) {
+        return new ResponseEntity<>(bookService.getById(id), HttpStatus.OK);
     }
 
     @UpdateBookEndpoint
