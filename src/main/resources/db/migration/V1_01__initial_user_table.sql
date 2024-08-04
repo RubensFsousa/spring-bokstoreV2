@@ -9,8 +9,8 @@ CREATE TABLE users_tb
     role       VARCHAR(15)   NOT NULL
 );
 
-INSERT INTO users_tb(id, email, username, password, role, created_at, updated_at)
-VALUES (1, 'admin@admin.com', 'admin', '$2a$10$wGCqWXZLURgKkpyLLZCApOWml2dCV7B8sxYipV3RK.tF.erOdis2S', 'ADMIN', now(),
+INSERT INTO users_tb(email, username, password, role, created_at, updated_at)
+VALUES ('admin@admin.com', 'admin', '$2a$10$wGCqWXZLURgKkpyLLZCApOWml2dCV7B8sxYipV3RK.tF.erOdis2S', 'ADMIN', now(),
         now()),
-       (2, 'visitor@visitor.com', 'visitor', '$2a$10$c/jO.D2yxaOwS4a9mUcv3uWyn6XlzQ11NnwNiWShxMB3Sw8ohHZoW', 'VISITOR',
+       ('visitor@visitor.com', 'visitor', '$2a$10$c/jO.D2yxaOwS4a9mUcv3uWyn6XlzQ11NnwNiWShxMB3Sw8ohHZoW', 'VISITOR',
         now(), now())
