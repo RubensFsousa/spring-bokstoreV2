@@ -60,6 +60,7 @@ public class RenterMapperImpl implements RenterMapper {
     public PageResponse<GetRenterRentsPageResponseDTO> toRenterRentsPageResponseDTO(Page<RenterEntity> rentersPage) {
         var content = rentersPage.getContent().stream().map(renter -> GetRenterRentsPageResponseDTO.builder()
                 .id(renter.getId())
+                .name(renter.getName())
                 .totalRents(renter.getRents().size())
                 .activeRents(renter.getRents().stream()
                         .filter(rent -> rent.getStatus().equals(RentStatus.IN_TIME) || rent.getStatus().equals(RentStatus.DELAYED))
