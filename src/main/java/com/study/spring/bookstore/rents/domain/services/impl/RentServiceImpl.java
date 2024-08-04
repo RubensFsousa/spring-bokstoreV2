@@ -6,9 +6,12 @@ import com.study.spring.base.shared.models.PageResponse;
 import com.study.spring.bookstore.books.domain.entities.BookEntity;
 import com.study.spring.bookstore.books.domain.repositories.BookRepository;
 import com.study.spring.bookstore.renters.domain.entities.RenterEntity;
+import com.study.spring.bookstore.renters.domain.mapper.RenterMapper;
 import com.study.spring.bookstore.renters.domain.repositories.RenterRepository;
+import com.study.spring.bookstore.renters.domain.specs.RenterSpecs;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetMostRentedBookResponseDTO;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRentPageResponseDTO;
+import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRenterRentsPageResponseDTO;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.RentCreateRequestDTO;
 import com.study.spring.bookstore.rents.domain.entities.RentEntity;
 import com.study.spring.bookstore.rents.domain.enums.RentStatus;
@@ -34,6 +37,7 @@ public class RentServiceImpl implements RentService {
     private final RentMapper rentMapper;
     private final BookRepository bookRepository;
     private final RenterRepository renterRepository;
+    private final RenterMapper renterMapper;
 
     @Override
     public void create(RentCreateRequestDTO request) {
@@ -82,11 +86,26 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public GetMostRentedBookResponseDTO mostRentedBook() {
+    public GetMostRentedBookResponseDTO mostRentedBook(Integer positions) {
         updateRentStatuses();
-
         var mostRented = rentRepository.findMostRentedBook();
-        return rentMapper.toMostRentedBookResponseDTO(mostRented.get(0));
+
+        try{
+            return rentMapper.toMostRentedBookResponseDTO(mostRented.get(positions));
+        } catch (Exception e){
+            throw new BusinessException("It was not possible to select this number of books");
+        }
+
+    }
+
+    @Override
+    public PageResponse<GetRenterRentsPageResponseDTO> getRenterRentsPage(String search, PageRequest pageable) {
+        Specification<RenterEntity> spec = Specification
+                .where(RenterSpecs.containsTextInAllColumns(search))
+                .and(RenterSpecs.isDeleted(false));
+
+        var rentersPage = renterRepository.findAll(spec, pageable);
+        return renterMapper.toRenterRentsPageResponseDTO(rentersPage);
     }
 
     private void validateRent(RenterEntity renter, BookEntity book) {

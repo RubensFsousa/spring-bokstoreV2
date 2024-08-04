@@ -14,6 +14,4 @@ public interface RenterService {
     void update(RenterUpdateRequestDTO request);
 
     void delete(Integer id);
-
-    PageResponse<GetRenterRentsPageResponseDTO> getRenterRentsPage(String search, PageRequest pageable);
 }

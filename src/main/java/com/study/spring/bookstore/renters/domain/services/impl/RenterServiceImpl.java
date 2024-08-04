@@ -51,11 +51,6 @@ public class RenterServiceImpl implements RenterService {
     }
 
     @Override
-    public PageResponse<GetRenterRentsPageResponseDTO> getRenterRentsPage(String search, PageRequest pageable) {
-        return null;
-    }
-
-    @Override
     public void update(RenterUpdateRequestDTO request) {
         var renter = getRenterByIdOrElseThrow(request.id());
         validateIsDeleted(renter);

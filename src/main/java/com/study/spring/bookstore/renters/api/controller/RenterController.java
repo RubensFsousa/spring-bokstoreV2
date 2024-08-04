@@ -6,6 +6,7 @@ import com.study.spring.base.shared.models.PageResponse;
 import com.study.spring.bookstore.renters.api.controller.annotations.*;
 import com.study.spring.bookstore.renters.api.controller.models.DTOs.*;
 import com.study.spring.bookstore.renters.domain.services.RenterService;
+import com.study.spring.bookstore.rents.api.controllers.annotations.GetRenterRentsEndpoint;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -44,18 +45,6 @@ public class RenterController {
     ) {
         var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
         return new ResponseEntity<>(renterService.getRenterPage(search, pageable), HttpStatus.OK);
-    }
-
-    @GetRenterRentsEndpoints
-    public ResponseEntity<PageResponse<GetRenterRentsPageResponseDTO>> getRentsPage(
-            @RequestParam(value = "search", required = false) String search,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "sort", defaultValue = "id") String sort,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction
-    ) {
-        var pageable = PageRequest.of(page, size, Sort.Direction.fromString(direction), sort);
-        return new ResponseEntity<>(renterService.getRenterRentsPage(search, pageable), HttpStatus.OK);
     }
 
     @UpdateRenterEndpoint

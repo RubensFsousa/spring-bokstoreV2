@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
         description = "Requires role: " + Roles.Name.ADMIN + " or " + Roles.Name.VISITOR
 )
 @PreAuthorize("hasAnyAuthority('ADMIN', 'VISITOR')")
-@RequestMapping(method = RequestMethod.GET, path = "/most-rented", produces = "application/json")
+@RequestMapping(method = RequestMethod.GET, path = "/most-rented/{positions}", produces = "application/json")
 @OpenApiResponse200
 @OpenApiResponse400
 @OpenApiResponse401

@@ -5,6 +5,7 @@ import com.study.spring.bookstore.renters.api.controller.models.DTOs.GetRenterDe
 import com.study.spring.bookstore.renters.api.controller.models.DTOs.GetRenterPageResponseDTO;
 import com.study.spring.bookstore.renters.api.controller.models.DTOs.RenterCreateRequestDTO;
 import com.study.spring.bookstore.renters.domain.entities.RenterEntity;
+import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRenterRentsPageResponseDTO;
 import org.springframework.data.domain.Page;
 
 public interface RenterMapper {
@@ -13,4 +14,6 @@ public interface RenterMapper {
     GetRenterDetailsResponseDTO toRenterDetailsResponseDTO(RenterEntity renter);
 
     PageResponse<GetRenterPageResponseDTO> toRenterPageResponseDTO(Page<RenterEntity> rentersPage);
+
+    PageResponse<GetRenterRentsPageResponseDTO> toRenterRentsPageResponseDTO(Page<RenterEntity> rentersPage);
 }

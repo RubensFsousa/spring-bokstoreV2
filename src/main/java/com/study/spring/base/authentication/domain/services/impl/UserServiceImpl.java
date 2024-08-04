@@ -11,7 +11,6 @@ import com.study.spring.base.authentication.domain.services.UserService;
 import com.study.spring.base.authentication.domain.specs.UserSpecs;
 import com.study.spring.base.shared.exceptions.EntityNotFoundException;
 import com.study.spring.base.shared.models.PageResponse;
-import com.study.spring.bookstore.books.api.controller.models.DTOs.GetBookPageResponseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;

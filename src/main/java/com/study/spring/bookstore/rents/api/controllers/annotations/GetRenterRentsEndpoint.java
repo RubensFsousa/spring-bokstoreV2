@@ -1,4 +1,4 @@
-package com.study.spring.bookstore.renters.api.controller.annotations;
+package com.study.spring.bookstore.rents.api.controllers.annotations;
 
 import com.study.spring.base.authentication.domain.models.enums.Roles;
 import com.study.spring.base.shared.annotations.OpenApiResponse200;
@@ -16,16 +16,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Operation(
-        summary = "Get renter rents page",
+        summary = "Get renter rents relation",
         description = "Requires role: " + Roles.Name.ADMIN + " or " + Roles.Name.VISITOR
 )
 @PreAuthorize("hasAnyAuthority('ADMIN', 'VISITOR')")
-@RequestMapping(method = RequestMethod.GET, path = "/rents", produces = "application/json")
+@RequestMapping(method = RequestMethod.GET, path = "/renters", produces = "application/json")
 @OpenApiResponse200
 @OpenApiResponse400
 @OpenApiResponse401
 @OpenApiResponse403
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GetRenterRentsEndpoints {
+public @interface GetRenterRentsEndpoint {
 }
