@@ -6,9 +6,12 @@ import com.study.spring.base.shared.models.PageResponse;
 import com.study.spring.bookstore.books.domain.entities.BookEntity;
 import com.study.spring.bookstore.books.domain.repositories.BookRepository;
 import com.study.spring.bookstore.renters.domain.entities.RenterEntity;
+import com.study.spring.bookstore.renters.domain.mapper.RenterMapper;
 import com.study.spring.bookstore.renters.domain.repositories.RenterRepository;
+import com.study.spring.bookstore.renters.domain.specs.RenterSpecs;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetMostRentedBookResponseDTO;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRentPageResponseDTO;
+import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRenterRentsPageResponseDTO;
 import com.study.spring.bookstore.rents.api.controllers.models.DTOs.RentCreateRequestDTO;
 import com.study.spring.bookstore.rents.domain.entities.RentEntity;
 import com.study.spring.bookstore.rents.domain.enums.RentStatus;
@@ -21,7 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -32,6 +37,7 @@ public class RentServiceImpl implements RentService {
     private final RentMapper rentMapper;
     private final BookRepository bookRepository;
     private final RenterRepository renterRepository;
+    private final RenterMapper renterMapper;
 
     @Override
     public void create(RentCreateRequestDTO request) {
@@ -62,23 +68,44 @@ public class RentServiceImpl implements RentService {
         updateRentStatuses();
 
         var rent = getRentByIdOrElseThrow(id);
-        if (rent.getStatus() == RentStatus.DELIVERED) {
+        var today = LocalDate.now();
+        var deadlineDate = rent.getDeadLineDate();
+
+        if (rent.getStatus() == RentStatus.DELIVERED || rent.getStatus() == RentStatus.DELIVERED_WITH_DELAY) {
             throw new BusinessException("Rent already delivered");
         }
 
-        rent.toBuilder()
-                .status(RentStatus.DELIVERED)
-                .devolutionDate(LocalDate.now())
-                .build();
+        if (today.isAfter(deadlineDate)) {
+            rent.setStatus(RentStatus.DELIVERED_WITH_DELAY);
+        } else {
+            rent.setStatus(RentStatus.DELIVERED);
+        }
+
+        rent.setDevolutionDate(today);
         rentRepository.save(rent);
     }
 
     @Override
-    public GetMostRentedBookResponseDTO mostRentedBook() {
+    public GetMostRentedBookResponseDTO mostRentedBook(Integer positions) {
         updateRentStatuses();
-
         var mostRented = rentRepository.findMostRentedBook();
-        return rentMapper.toMostRentedBookResponseDTO(mostRented.get(0));
+
+        try{
+            return rentMapper.toMostRentedBookResponseDTO(mostRented.get(positions));
+        } catch (Exception e){
+            throw new BusinessException("It was not possible to select this number of books");
+        }
+
+    }
+
+    @Override
+    public PageResponse<GetRenterRentsPageResponseDTO> getRenterRentsPage(String search, PageRequest pageable) {
+        Specification<RenterEntity> spec = Specification
+                .where(RenterSpecs.containsTextInAllColumns(search))
+                .and(RenterSpecs.isDeleted(false));
+
+        var rentersPage = renterRepository.findAll(spec, pageable);
+        return renterMapper.toRenterRentsPageResponseDTO(rentersPage);
     }
 
     private void validateRent(RenterEntity renter, BookEntity book) {
@@ -111,13 +138,25 @@ public class RentServiceImpl implements RentService {
     }
 
     private void updateRentStatuses() {
-        List<RentEntity> rents = rentRepository.findAll();
-        for (RentEntity rent : rents) {
-            if (rent.getStatus() != RentStatus.DELIVERED && rent.getDeadLineDead().isBefore(LocalDate.now())) {
-                rent.toBuilder().status(RentStatus.DELAYED).build();
-                rentRepository.save(rent);
+        var rents = rentRepository.findAll();
+        var today = LocalDate.now();
+
+        rents.forEach(rent -> {
+            var currentStatus = rent.getStatus();
+            var deadlineDate = rent.getDeadLineDate();
+
+            if (deadlineDate.isAfter(today)) {
+                if (currentStatus != RentStatus.DELIVERED && currentStatus != RentStatus.DELIVERED_WITH_DELAY) {
+                    rent.setStatus(RentStatus.DELAYED);
+                }
+            } else if (deadlineDate.isBefore(today)) {
+                if (currentStatus != RentStatus.DELIVERED) {
+                    rent.setStatus(RentStatus.IN_TIME);
+                }
             }
-        }
+        });
+
+        rentRepository.saveAll(rents);
     }
 
     private void validateDeadline(LocalDate deadLine) {

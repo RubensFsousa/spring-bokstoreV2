@@ -5,7 +5,7 @@ CREATE TABLE rents_tb
     updated_at     TIMESTAMP   NOT NULL,
     delivered_date DATE,
     deadline_date  DATE        NOT NULL,
-    status         VARCHAR(15) NOT NULL,
+    status         VARCHAR(25) NOT NULL,
     renter_id      SERIAL      NOT NULL,
     book_id        SERIAL      NOT NULL,
 

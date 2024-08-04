@@ -1,12 +1,12 @@
 package com.study.spring.base.authentication.domain.specs;
 
-import com.study.spring.bookstore.books.domain.entities.BookEntity;
+import com.study.spring.base.authentication.domain.models.entities.UserEntity;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 public class UserSpecs {
 
-    public static Specification<BookEntity> containsTextInAllColumns(String text) {
+    public static Specification<UserEntity> containsTextInAllColumns(String text) {
         return (root, query, criteriaBuilder) -> {
             if (text == null || text.isEmpty()) {
                 return criteriaBuilder.conjunction();

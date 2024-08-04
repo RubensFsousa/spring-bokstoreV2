@@ -2,7 +2,10 @@ package com.study.spring.base.authentication.api.controllers.users.DTOs;
 
 import com.study.spring.base.authentication.domain.models.enums.Roles;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder

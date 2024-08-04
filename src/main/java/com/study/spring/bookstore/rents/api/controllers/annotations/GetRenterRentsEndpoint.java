@@ -16,16 +16,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Operation(
-        summary = "Get most rented book",
+        summary = "Get renter rents relation",
         description = "Requires role: " + Roles.Name.ADMIN + " or " + Roles.Name.VISITOR
 )
 @PreAuthorize("hasAnyAuthority('ADMIN', 'VISITOR')")
-@RequestMapping(method = RequestMethod.GET, path = "/most-rented/{positions}", produces = "application/json")
+@RequestMapping(method = RequestMethod.GET, path = "/renters", produces = "application/json")
 @OpenApiResponse200
 @OpenApiResponse400
 @OpenApiResponse401
 @OpenApiResponse403
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface GetMostRentedBook {
+public @interface GetRenterRentsEndpoint {
 }

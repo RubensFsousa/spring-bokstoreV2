@@ -2,13 +2,18 @@ package com.study.spring.base.authentication.domain.services.impl;
 
 import com.study.spring.base.authentication.api.controllers.users.DTOs.CreateUserRequestDTO;
 import com.study.spring.base.authentication.api.controllers.users.DTOs.GetUserDetailsResponseDTO;
+import com.study.spring.base.authentication.api.controllers.users.DTOs.GetUserPageResponseDTO;
 import com.study.spring.base.authentication.api.controllers.users.DTOs.UpdateUserRequestDTO;
 import com.study.spring.base.authentication.domain.mappers.UserMapper;
 import com.study.spring.base.authentication.domain.models.entities.UserEntity;
 import com.study.spring.base.authentication.domain.repositories.UserRepository;
 import com.study.spring.base.authentication.domain.services.UserService;
+import com.study.spring.base.authentication.domain.specs.UserSpecs;
 import com.study.spring.base.shared.exceptions.EntityNotFoundException;
+import com.study.spring.base.shared.models.PageResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +49,14 @@ public class UserServiceImpl implements UserService {
     public GetUserDetailsResponseDTO getUserById(Integer id) {
         var user = getUserByIdOrThrow(id);
         return userMapper.toGetUserDetailsResponseDTO(user);
+    }
+
+    @Override
+    public PageResponse<GetUserPageResponseDTO> getUserPage(String search, PageRequest pageable) {
+        Specification<UserEntity> spec = Specification
+                .where(UserSpecs.containsTextInAllColumns(search));
+        var usersPage = userRepository.findAll(spec, pageable);
+        return userMapper.toUserPageResponseDTO(usersPage);
     }
 
     private UserEntity getUserByIdOrThrow(Integer id) {

@@ -6,6 +6,8 @@ import com.study.spring.bookstore.renters.api.controller.models.DTOs.GetRenterPa
 import com.study.spring.bookstore.renters.api.controller.models.DTOs.RenterCreateRequestDTO;
 import com.study.spring.bookstore.renters.domain.entities.RenterEntity;
 import com.study.spring.bookstore.renters.domain.mapper.RenterMapper;
+import com.study.spring.bookstore.rents.api.controllers.models.DTOs.GetRenterRentsPageResponseDTO;
+import com.study.spring.bookstore.rents.domain.enums.RentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +45,25 @@ public class RenterMapperImpl implements RenterMapper {
                 .name(renter.getName())
                 .email(renter.getEmail())
                 .telephone(renter.getTelephone())
+                .build()).toList();
+
+        return new PageResponse<>(
+                content,
+                rentersPage.getNumber(),
+                rentersPage.getSize(),
+                rentersPage.getTotalElements(),
+                rentersPage.getTotalPages()
+        );
+    }
+
+    @Override
+    public PageResponse<GetRenterRentsPageResponseDTO> toRenterRentsPageResponseDTO(Page<RenterEntity> rentersPage) {
+        var content = rentersPage.getContent().stream().map(renter -> GetRenterRentsPageResponseDTO.builder()
+                .id(renter.getId())
+                .totalRents(renter.getRents().size())
+                .activeRents(renter.getRents().stream()
+                        .filter(rent -> rent.getStatus().equals(RentStatus.IN_TIME) || rent.getStatus().equals(RentStatus.DELAYED))
+                        .toList().size())
                 .build()).toList();
 
         return new PageResponse<>(
