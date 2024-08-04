@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "rents_tb")
 @Getter
+@Setter
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +26,7 @@ public class RentEntity extends BaseEntity {
     @Column(name = "delivered_date")
     private LocalDate devolutionDate;
     @Column(name = "deadline_date", nullable = false)
-    private LocalDate deadLineDead;
+    private LocalDate deadLineDate;
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private RentStatus status;
@@ -35,10 +37,4 @@ public class RentEntity extends BaseEntity {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "id")
     private BookEntity book;
-
-    public RentStatus getStatus(){
-        if (LocalDate.now().isAfter(deadLineDead) && devolutionDate == null) return RentStatus.DELAYED;
-        if (LocalDate.now().isBefore(deadLineDead) && devolutionDate == null) return RentStatus.IN_TIME;
-        return RentStatus.DELIVERED;
-    }
 }

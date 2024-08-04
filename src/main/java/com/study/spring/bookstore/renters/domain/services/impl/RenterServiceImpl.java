@@ -3,10 +3,7 @@ package com.study.spring.bookstore.renters.domain.services.impl;
 import com.study.spring.base.shared.exceptions.BusinessException;
 import com.study.spring.base.shared.exceptions.EntityNotFoundException;
 import com.study.spring.base.shared.models.PageResponse;
-import com.study.spring.bookstore.renters.api.controller.models.DTOs.GetRenterDetailsResponseDTO;
-import com.study.spring.bookstore.renters.api.controller.models.DTOs.GetRenterPageResponseDTO;
-import com.study.spring.bookstore.renters.api.controller.models.DTOs.RenterCreateRequestDTO;
-import com.study.spring.bookstore.renters.api.controller.models.DTOs.RenterUpdateRequestDTO;
+import com.study.spring.bookstore.renters.api.controller.models.DTOs.*;
 import com.study.spring.bookstore.renters.domain.entities.RenterEntity;
 import com.study.spring.bookstore.renters.domain.mapper.RenterMapper;
 import com.study.spring.bookstore.renters.domain.repositories.RenterRepository;
@@ -51,6 +48,11 @@ public class RenterServiceImpl implements RenterService {
 
         var rentersPage = renterRepository.findAll(spec, pageable);
         return renterMapper.toRenterPageResponseDTO(rentersPage);
+    }
+
+    @Override
+    public PageResponse<GetRenterRentsPageResponseDTO> getRenterRentsPage(String search, PageRequest pageable) {
+        return null;
     }
 
     @Override

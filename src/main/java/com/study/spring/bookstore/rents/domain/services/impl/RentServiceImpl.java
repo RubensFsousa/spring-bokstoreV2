@@ -21,7 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -62,14 +64,20 @@ public class RentServiceImpl implements RentService {
         updateRentStatuses();
 
         var rent = getRentByIdOrElseThrow(id);
-        if (rent.getStatus() == RentStatus.DELIVERED) {
+        var today = LocalDate.now();
+        var deadlineDate = rent.getDeadLineDate();
+
+        if (rent.getStatus() == RentStatus.DELIVERED || rent.getStatus() == RentStatus.DELIVERED_WITH_DELAY) {
             throw new BusinessException("Rent already delivered");
         }
 
-        rent.toBuilder()
-                .status(RentStatus.DELIVERED)
-                .devolutionDate(LocalDate.now())
-                .build();
+        if (today.isAfter(deadlineDate)) {
+            rent.setStatus(RentStatus.DELIVERED_WITH_DELAY);
+        } else {
+            rent.setStatus(RentStatus.DELIVERED);
+        }
+
+        rent.setDevolutionDate(today);
         rentRepository.save(rent);
     }
 
@@ -111,13 +119,25 @@ public class RentServiceImpl implements RentService {
     }
 
     private void updateRentStatuses() {
-        List<RentEntity> rents = rentRepository.findAll();
-        for (RentEntity rent : rents) {
-            if (rent.getStatus() != RentStatus.DELIVERED && rent.getDeadLineDead().isBefore(LocalDate.now())) {
-                rent.toBuilder().status(RentStatus.DELAYED).build();
-                rentRepository.save(rent);
+        var rents = rentRepository.findAll();
+        var today = LocalDate.now();
+
+        rents.forEach(rent -> {
+            var currentStatus = rent.getStatus();
+            var deadlineDate = rent.getDeadLineDate();
+
+            if (deadlineDate.isAfter(today)) {
+                if (currentStatus != RentStatus.DELIVERED && currentStatus != RentStatus.DELIVERED_WITH_DELAY) {
+                    rent.setStatus(RentStatus.DELAYED);
+                }
+            } else if (deadlineDate.isBefore(today)) {
+                if (currentStatus != RentStatus.DELIVERED) {
+                    rent.setStatus(RentStatus.IN_TIME);
+                }
             }
-        }
+        });
+
+        rentRepository.saveAll(rents);
     }
 
     private void validateDeadline(LocalDate deadLine) {

@@ -24,14 +24,14 @@ public abstract class BaseEntity {
     protected Integer id;
 
     @Column(name = "created_at", nullable = false)
-    protected OffsetDateTime createdAT;
+    protected OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
     protected OffsetDateTime updatedAt;
 
     @PrePersist
     private void onCreate() {
-        createdAT = updatedAt = OffsetDateTime.now();
+        createdAt = updatedAt = OffsetDateTime.now();
     }
 
     @PreUpdate

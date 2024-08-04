@@ -21,7 +21,7 @@ public class RentMapperImpl implements RentMapper {
         return RentEntity.builder()
                 .renter(renter)
                 .book(book)
-                .deadLineDead(request.deadline())
+                .deadLineDate(request.deadline())
                 .status(IN_TIME)
                 .build();
     }
@@ -34,8 +34,8 @@ public class RentMapperImpl implements RentMapper {
                 .bookName(rent.getBook().getName())
                 .status(rent.getStatus())
                 .devolutionDate(rent.getDevolutionDate())
-                .deadLineDate(rent.getDeadLineDead())
-                .rentDate(rent.getCreatedAT().toLocalDate())
+                .deadLineDate(rent.getDeadLineDate())
+                .rentDate(rent.getCreatedAt().toLocalDate())
                 .build()).toList();
 
         return new PageResponse<>(
