@@ -13,7 +13,7 @@ public class UserSpecs {
             }
 
             var likePattern = "%" + text.toLowerCase() + "%";
-            Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), likePattern);
+            Predicate namePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), likePattern);
             Predicate rolePredicate = criteriaBuilder.like(criteriaBuilder.lower(root.get("role")), likePattern);
 
             var predicates = new Predicate[] {
